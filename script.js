@@ -11,7 +11,7 @@ tataLeleImage.src = 'tata_lele.png';  // Chemin de l'image de l'héroïne
 // Chargement de la musique
 const backgroundMusic = new Audio('background_music.mp3');
 backgroundMusic.loop = true; // Répéter la musique en boucle
-let isMusicPlaying = false; // État de la musique
+let isMusicPlaying = false; // L'état initial de la musique (démarre en pause)
 
 // Bouton pour activer/désactiver la musique
 const toggleMusicButton = document.getElementById('toggleMusic');
@@ -26,6 +26,17 @@ toggleMusicButton.addEventListener('click', () => {
         toggleMusicButton.textContent = '🔇'; // Icône son coupé
     }
     isMusicPlaying = !isMusicPlaying; // Alterner l'état
+});
+
+// Demander une interaction de l'utilisateur pour démarrer la musique (cela contourne la politique de lecture automatique des navigateurs)
+window.addEventListener('click', () => {
+    if (!isMusicPlaying) {
+        backgroundMusic.play().catch(error => {
+            console.error('Erreur lors de la lecture automatique de la musique :', error);
+        });
+        toggleMusicButton.textContent = '🔇'; // Icône son coupé
+        isMusicPlaying = true; // Marquer la musique comme jouée
+    }
 });
 
 // Vérification du chargement de la musique
