@@ -48,17 +48,17 @@ backgroundMusic.addEventListener('canplay', () => {
 // Variables pour le dialogue et les choix
 let currentDialogueIndex = 0;
 let dialogues = [
-    "HO HO HO Tata Lélé, j'imagine que tu es prête à recevoir ton cadeau.",
+    "HO HO HO Tata Lélé, j'imagine que tu es prête à recevoir ton cadeau.Que voudrais-tu pour Noël ",
     "Que voudrais-tu pour Noël ?"
 ];
 
 let choices = [
-    "Un massage près de Vannes (dans la limite de 60 € bien évidemment pour ne pas que les autres se sentent lésés, petite maligne).",
-    "Rien, j'ai déjà ce qu'il me faut."
+    "Un massage fait par "El famoso" Richard quand tu seras de passage à Chartres",
+    "Rien, j'ai déjà ce qu'il me faut, ma vie est merveilleuse."
 ];
 
 let responses = [
-    "Excellent choix, va voir ton Secret Santa (si tu sais qui c'est) pour lui donner la meilleure adresse de massage de Vannes. Et surtout, joyeux Noël !",
+    "Excellent choix, va voir ton Secret Santa (si tu sais qui c'est) pour lui la date Et surtout, joyeux Noël !",
     "Ho ho ho, heureusement que tout le monde ne réagit pas comme toi, tu veux la mort du petit commerce ou quoi ? Mais bon, joyeux Noël quand même."
 ];
 
