@@ -8,6 +8,31 @@ const tataLeleImage = new Image();
 backgroundImage.src = 'background_christmas.png';  // Chemin de l'image de fond
 tataLeleImage.src = 'tata_lele.png';  // Chemin de l'image de l'héroïne
 
+// Chargement de la musique
+const backgroundMusic = new Audio('background_music.mp3');
+backgroundMusic.loop = true; // Répéter la musique en boucle
+let isMusicPlaying = false; // État de la musique
+
+// Bouton pour activer/désactiver la musique
+const toggleMusicButton = document.getElementById('toggleMusic');
+toggleMusicButton.addEventListener('click', () => {
+    if (isMusicPlaying) {
+        backgroundMusic.pause(); // Mettre en pause la musique
+        toggleMusicButton.textContent = '🔊'; // Icône son activé
+    } else {
+        backgroundMusic.play().catch(error => {
+            console.error('Erreur lors de la lecture de la musique :', error);
+        });
+        toggleMusicButton.textContent = '🔇'; // Icône son coupé
+    }
+    isMusicPlaying = !isMusicPlaying; // Alterner l'état
+});
+
+// Vérification du chargement de la musique
+backgroundMusic.addEventListener('canplay', () => {
+    console.log('Musique de fond chargée.');
+});
+
 // Variables pour le dialogue et les choix
 let currentDialogueIndex = 0;
 let dialogues = [
@@ -134,6 +159,26 @@ function drawFinalMessage() {
     wrapText(ctx, 'JOYEUX NOËL TATA LÉLÉ', canvas.width / 2, canvas.height / 2 - 24, canvas.width - 40, 48);
 }
 
+// Fonction pour afficher du texte avec retour à la ligne
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+    let words = text.split(' ');
+    let line = '';
+
+    for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = context.measureText(testLine);
+        let testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+            context.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+        } else {
+            line = testLine;
+        }
+    }
+    context.fillText(line, x, y);
+}
+
 // Gestion des événements clavier (PC)
 document.addEventListener('keydown', (event) => {
     if (event.code === 'Space') {
@@ -193,26 +238,6 @@ function advanceDialogue() {
             drawDialogue();
         }
     }
-}
-
-// Fonction pour afficher du texte avec retour à la ligne
-function wrapText(context, text, x, y, maxWidth, lineHeight) {
-    let words = text.split(' ');
-    let line = '';
-
-    for (let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        let metrics = context.measureText(testLine);
-        let testWidth = metrics.width;
-        if (testWidth > maxWidth && n > 0) {
-            context.fillText(line, x, y);
-            line = words[n] + ' ';
-            y += lineHeight;
-        } else {
-            line = testLine;
-        }
-    }
-    context.fillText(line, x, y);
 }
 
 // Lancer les dialogues au chargement des images
