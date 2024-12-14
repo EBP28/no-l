@@ -28,14 +28,15 @@ toggleMusicButton.addEventListener('click', () => {
     isMusicPlaying = !isMusicPlaying; // Alterner l'état
 });
 
-// Demander une interaction de l'utilisateur pour démarrer la musique (cela contourne la politique de lecture automatique des navigateurs)
+// Demander une interaction de l'utilisateur pour démarrer la musique
+// C'est ici que la musique démarre, grâce à l'interaction initiale (clic sur la page)
 window.addEventListener('click', () => {
     if (!isMusicPlaying) {
         backgroundMusic.play().catch(error => {
             console.error('Erreur lors de la lecture automatique de la musique :', error);
         });
         toggleMusicButton.textContent = '🔇'; // Icône son coupé
-        isMusicPlaying = true; // Marquer la musique comme jouée
+        isMusicPlaying = true; // La musique est maintenant jouée
     }
 });
 
@@ -106,7 +107,7 @@ function drawTataLele() {
     ctx.drawImage(tataLeleImage, x, y, tataLeleWidth, tataLeleHeight);
 }
 
-// Fonction pour afficher le dialogue
+// Fonction pour afficher le dialogue actuel
 function drawDialogue() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
@@ -190,66 +191,35 @@ function wrapText(context, text, x, y, maxWidth, lineHeight) {
     context.fillText(line, x, y);
 }
 
-// Gestion des événements clavier (PC)
-document.addEventListener('keydown', (event) => {
-    if (event.code === 'Space') {
-        if (isChoosing) {
-            makeChoice();
-        } else if (showingResponse) {
-            drawFinalMessage();
-            showingResponse = false;
-            isFinalMessage = true;
-        } else if (!isFinalMessage) {
-            advanceDialogue();
-        }
-    } else if (event.code === 'ArrowUp' && isChoosing) {
-        selectedChoice = (selectedChoice > 0) ? selectedChoice - 1 : choices.length - 1;
-        drawChoices();
-    } else if (event.code === 'ArrowDown' && isChoosing) {
-        selectedChoice = (selectedChoice < choices.length - 1) ? selectedChoice + 1 : 0;
-        drawChoices();
-    }
-});
-
-// Gestion des événements tactiles (smartphone)
-canvas.addEventListener('touchstart', (event) => {
-    const touch = event.touches[0];
-    const rect = canvas.getBoundingClientRect();
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
-
-    if (isChoosing) {
-        const choiceBoxHeight = 60;
-        const choiceBoxYStart = canvas.height - 160;
-        for (let i = 0; i < choices.length; i++) {
-            const choiceBoxY = choiceBoxYStart + (i * choiceBoxHeight);
-            if (y > choiceBoxY && y < choiceBoxY + choiceBoxHeight) {
-                selectedChoice = i;
-                makeChoice();
-                return;
-            }
-        }
-    } else if (showingResponse) {
-        drawFinalMessage();
-        showingResponse = false;
-        isFinalMessage = true;
-    } else if (!isFinalMessage) {
-        advanceDialogue();
-    }
-});
-
-// Fonction pour gérer les dialogues
+// Fonction pour gérer l'avancement du dialogue
 function advanceDialogue() {
     if (currentDialogueIndex < dialogues.length - 1) {
-        currentDialogueIndex++;
+        currentDialogueIndex++; // Passe au dialogue suivant
         if (currentDialogueIndex === dialogues.length - 1) {
+            // Quand le dernier dialogue est atteint, afficher les choix
             isChoosing = true;
             drawChoices();
         } else {
-            drawDialogue();
+            drawDialogue(); // Affiche le dialogue suivant
         }
     }
 }
+
+// Gérer l'avancement du dialogue avec un clic ou la barre d'espace
+window.addEventListener('click', () => {
+    if (!isChoosing && !showingResponse && !isFinalMessage) {
+        advanceDialogue(); // Avancer le dialogue si l'on clique
+    }
+});
+
+// Gérer l'avancement du dialogue avec la barre d'espace
+document.addEventListener('keydown', (event) => {
+    if (event.code === 'Space') {
+        if (!isChoosing && !showingResponse && !isFinalMessage) {
+            advanceDialogue(); // Avancer le dialogue si on appuie sur la barre d'espace
+        }
+    }
+});
 
 // Lancer les dialogues au chargement des images
 backgroundImage.onload = () => {
