@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #game-container {
+      width: 80%;
+      max-width: 600px;
+    }
+    #dialog-box {
+      background: rgba(30, 58, 138, 0.95);
+      border: 4px solid white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .option {
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 4px;
+    }
+    .selected {
+      background: #1d4ed8;
+      border: 2px solid white;
+    }
+    #instructions {
+      color: #9ca3af;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="dialog-box">
+      <div id="dialog-text">HO HO HO Tata Lélé, J'imagine que tu es prête à recevoir ton cadeau.</div>
+      <div id="options" style="display: none;">
+        <div class="option selected">1. Un massage près de Vannes (dans la limite de 60 € bien évidemment pour ne pas que les autres se sentent lésés, petite maligne).</div>
+        <div class="option">2. Rien, j'ai déjà ce qu'il me faut.</div>
+      </div>
+      <div id="instructions">Appuyez sur ESPACE pour continuer</div>
+    </div>
+  </div>
+
+  <script>
+    const dialogText = document.getElementById('dialog-text');
+    const options = document.getElementById('options');
+    const instructions = document.getElementById('instructions');
+    let gameState = 'intro';
+    let selectedOption = 0;
+
+    const dialogues = {
+      intro: "HO HO HO Tata Lélé, J'imagine que tu es prête à recevoir ton cadeau.",
+      question: "Que voudrais-tu pour Noël ?",
+      results: [
+        "Excellent choix, va voir ton Secret Santa (si tu sais qui c'est) pour lui donner la meilleure adresse de massage de Vannes. Et surtout, joyeux Noël !",
+        "Ho ho ho, heureusement que tout le monde ne réagit pas comme toi, tu veux la mort du petit commerce ou quoi ? Mais bon, joyeux Noël quand même."
+      ]
+    };
+
+    document.addEventListener('keydown', (event) => {
+      event.preventDefault();
+      
+      if (event.code === 'Space') {
+        if (gameState === 'intro') {
+          gameState = 'question';
+          dialogText.textContent = dialogues.question;
+          options.style.display = 'block';
+          instructions.textContent = "Utilisez ↑↓ pour choisir et ESPACE pour valider";
+        } else if (gameState === 'question') {
+          gameState = 'result';
+          options.style.display = 'none';
+          dialogText.textContent = dialogues.results[selectedOption];
+          instructions.textContent = "Appuyez sur ESPACE pour terminer";
+        } else if (gameState === 'result') {
+          document.getElementById('dialog-box').style.display = 'none';
+        }
+      }
+      
+      if (gameState === 'question') {
+        const optionElements = document.querySelectorAll('.option');
+        if (event.code === 'ArrowUp' && selectedOption > 0) {
+          optionElements[selectedOption].classList.remove('selected');
+          selectedOption--;
+          optionElements[selectedOption].classList.add('selected');
+        } else if (event.code === 'ArrowDown' && selectedOption < 1) {
+          optionElements[selectedOption].classList.remove('selected');
+          selectedOption++;
+          optionElements[selectedOption].classList.add('selected');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
