@@ -33,8 +33,8 @@ function drawTataLele() {
 
 let currentDialogueIndex = 0;
 let dialogues = [
-    "HO HO HO Tata Lélé, j'imagine que tu es prête à recevoir ton cadeau.",
-    "Que voudrais-tu pour Noël ?"
+    "HO HO HO Tata Lélé, j'imagine que tu es prête à recevoir ton cadeau.Que voudrais-tu pour Noël",
+    
 ];
 
 let choices = [
