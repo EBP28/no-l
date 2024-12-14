@@ -8,57 +8,7 @@ const tataLeleImage = new Image();
 backgroundImage.src = 'background_christmas.png';  // Chemin de l'image de fond
 tataLeleImage.src = 'tata_lele.png';  // Chemin de l'image de l'héroïne
 
-// Assurez-vous que le canvas s'ajuste à la taille de l'écran
-function resizeCanvas() {
-    canvas.width = window.innerWidth;  // Redimensionne le canvas selon la taille de l'écran
-    canvas.height = window.innerHeight;  // Même chose pour la hauteur
-
-    drawBackground(); // Redessine le fond après redimensionnement
-    drawTataLele(); // Redessine Tata Lélé
-}
-
-// Dessiner le fond sans le redimensionner de manière disproportionnée
-function drawBackground() {
-    const imgRatio = backgroundImage.width / backgroundImage.height;
-    const canvasRatio = canvas.width / canvas.height;
-
-    // Si le ratio du canvas est plus large que celui de l'image, on redimensionne la hauteur
-    if (canvasRatio > imgRatio) {
-        const newHeight = canvas.width / imgRatio;
-        ctx.drawImage(backgroundImage, 0, (canvas.height - newHeight) / 2, canvas.width, newHeight);
-    } else {
-        const newWidth = canvas.height * imgRatio;
-        ctx.drawImage(backgroundImage, (canvas.width - newWidth) / 2, 0, newWidth, canvas.height);
-    }
-}
-
-// Dessiner Tata Lélé en conservant une taille proportionnelle
-function drawTataLele() {
-    const tataLeleWidth = 100;  // Largeur de Tata Lélé
-    const tataLeleHeight = 200;  // Hauteur de Tata Lélé
-    const x = canvas.width / 2 - tataLeleWidth / 2;  // Centrer horizontalement
-    const y = canvas.height - tataLeleHeight;  // Placer en bas de l'écran
-    ctx.drawImage(tataLeleImage, x, y, tataLeleWidth, tataLeleHeight);  // Dessiner l'héroïne
-}
-
-// Lors du chargement des images, commence à dessiner
-backgroundImage.onload = () => {
-    console.log('Background image loaded');
-    resizeCanvas();
-};
-
-tataLeleImage.onload = () => {
-    console.log('Tata Lélé image loaded');
-    drawTataLele();
-};
-
-// Initialisation du canvas et des images
-resizeCanvas();
-
-// Écouter les changements de taille de la fenêtre
-window.addEventListener('resize', resizeCanvas);
-
-// Variables pour le dialogue
+// Variables pour le dialogue et les choix
 let currentDialogueIndex = 0;
 let dialogues = [
     "HO HO HO Tata Lélé, j'imagine que tu es prête à recevoir ton cadeau.",
@@ -80,6 +30,46 @@ let isChoosing = false;
 let isFinalMessage = false;
 let showingResponse = false;
 
+// Fonction pour redimensionner dynamiquement le canvas
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Redessiner en fonction de l'état actuel
+    if (isChoosing) {
+        drawChoices();
+    } else if (showingResponse) {
+        makeChoice();
+    } else if (isFinalMessage) {
+        drawFinalMessage();
+    } else {
+        drawDialogue();
+    }
+}
+
+// Dessiner le fond sans le redimensionner de manière disproportionnée
+function drawBackground() {
+    const imgRatio = backgroundImage.width / backgroundImage.height;
+    const canvasRatio = canvas.width / canvas.height;
+
+    if (canvasRatio > imgRatio) {
+        const newHeight = canvas.width / imgRatio;
+        ctx.drawImage(backgroundImage, 0, (canvas.height - newHeight) / 2, canvas.width, newHeight);
+    } else {
+        const newWidth = canvas.height * imgRatio;
+        ctx.drawImage(backgroundImage, (canvas.width - newWidth) / 2, 0, newWidth, canvas.height);
+    }
+}
+
+// Dessiner Tata Lélé
+function drawTataLele() {
+    const tataLeleWidth = 100;
+    const tataLeleHeight = 200;
+    const x = canvas.width / 2 - tataLeleWidth / 2;
+    const y = canvas.height - tataLeleHeight;
+    ctx.drawImage(tataLeleImage, x, y, tataLeleWidth, tataLeleHeight);
+}
+
 // Fonction pour afficher le dialogue
 function drawDialogue() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -87,13 +77,13 @@ function drawDialogue() {
     drawTataLele();
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(10, 10, canvas.width - 20, 150);  // Boîte de dialogue
+    ctx.fillRect(10, 10, canvas.width - 20, 150); // Boîte de dialogue
     ctx.fillStyle = '#fff';
     ctx.font = '16px "Press Start 2P"';
     wrapText(ctx, dialogues[currentDialogueIndex], 20, 50, canvas.width - 40, 20);
 }
 
-// Fonction pour afficher les choix de réponse
+// Fonction pour afficher les choix
 function drawChoices() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
@@ -116,27 +106,35 @@ function drawChoices() {
     ctx.fillText('→', 10, canvas.height - 115 + (selectedChoice * 60));
 }
 
-// Fonction pour afficher le texte avec retour à la ligne
-function wrapText(context, text, x, y, maxWidth, lineHeight) {
-    let words = text.split(' ');
-    let line = '';
+// Fonction pour afficher une réponse après un choix
+function makeChoice() {
+    isChoosing = false;
+    showingResponse = true;
 
-    for (let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        let metrics = context.measureText(testLine);
-        let testWidth = metrics.width;
-        if (testWidth > maxWidth && n > 0) {
-            context.fillText(line, x, y);
-            line = words[n] + ' ';
-            y += lineHeight;
-        } else {
-            line = testLine;
-        }
-    }
-    context.fillText(line, x, y);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
+    drawTataLele();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(10, 10, canvas.width - 20, 150);
+    ctx.fillStyle = '#fff';
+    ctx.font = '16px "Press Start 2P"';
+    wrapText(ctx, responses[selectedChoice], 20, 50, canvas.width - 40, 20);
 }
 
-// Gestion des événements clavier
+// Fonction pour afficher le message final
+function drawFinalMessage() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
+    drawTataLele();
+    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+    ctx.fillRect(10, canvas.height / 2 - 75, canvas.width - 20, 150);
+    ctx.fillStyle = '#fff';
+    ctx.font = '48px "Press Start 2P"';
+    ctx.textAlign = 'center';
+    wrapText(ctx, 'JOYEUX NOËL TATA LÉLÉ', canvas.width / 2, canvas.height / 2 - 24, canvas.width - 40, 48);
+}
+
+// Gestion des événements clavier (PC)
 document.addEventListener('keydown', (event) => {
     if (event.code === 'Space') {
         if (isChoosing) {
@@ -157,7 +155,34 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-// Fonction pour faire avancer le dialogue
+// Gestion des événements tactiles (smartphone)
+canvas.addEventListener('touchstart', (event) => {
+    const touch = event.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+
+    if (isChoosing) {
+        const choiceBoxHeight = 60;
+        const choiceBoxYStart = canvas.height - 160;
+        for (let i = 0; i < choices.length; i++) {
+            const choiceBoxY = choiceBoxYStart + (i * choiceBoxHeight);
+            if (y > choiceBoxY && y < choiceBoxY + choiceBoxHeight) {
+                selectedChoice = i;
+                makeChoice();
+                return;
+            }
+        }
+    } else if (showingResponse) {
+        drawFinalMessage();
+        showingResponse = false;
+        isFinalMessage = true;
+    } else if (!isFinalMessage) {
+        advanceDialogue();
+    }
+});
+
+// Fonction pour gérer les dialogues
 function advanceDialogue() {
     if (currentDialogueIndex < dialogues.length - 1) {
         currentDialogueIndex++;
@@ -170,34 +195,32 @@ function advanceDialogue() {
     }
 }
 
-// Fonction pour faire un choix
-function makeChoice() {
-    isChoosing = false;
-    showingResponse = true;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground();
-    drawTataLele();
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(10, 10, canvas.width - 20, 150);
-    ctx.fillStyle = '#fff';
-    ctx.font = '16px "Press Start 2P"';
-    wrapText(ctx, responses[selectedChoice], 20, 50, canvas.width - 40, 20);
+// Fonction pour afficher du texte avec retour à la ligne
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+    let words = text.split(' ');
+    let line = '';
+
+    for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = context.measureText(testLine);
+        let testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+            context.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+        } else {
+            line = testLine;
+        }
+    }
+    context.fillText(line, x, y);
 }
 
-// Affichage du message final
-function drawFinalMessage() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground();
-    drawTataLele();
-    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-    ctx.fillRect(10, canvas.height / 2 - 75, canvas.width - 20, 150);
-    ctx.fillStyle = '#fff';
-    ctx.font = '48px "Press Start 2P"';
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = '#000';
-    wrapText(ctx, 'JOYEUX NOËL TATA LÉLÉ', canvas.width / 2, canvas.height / 2 - 24, canvas.width - 40, 48);
-}
+// Lancer les dialogues au chargement des images
+backgroundImage.onload = () => {
+    resizeCanvas();
+    drawDialogue();
+};
 
-// Initialiser le dialogue
-startDialogue();
+// Redimensionner au chargement initial
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
