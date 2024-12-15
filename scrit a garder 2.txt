@@ -1,0 +1,72 @@
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// Chargement des images
+const backgroundImage = new Image();
+const tataLeleImage = new Image();
+
+backgroundImage.src = 'background_christmas.png';  // Chemin de l'image de fond
+tataLeleImage.src = 'tata_lele.png';  // Chemin de l'image de l'héroïne
+
+// Chargement de la musique
+const backgroundMusic = new Audio('background_music.mp3');
+backgroundMusic.loop = true; // Répéter la musique en boucle
+let isMusicPlaying = false; // L'état initial de la musique (démarre en pause)
+
+// Bouton pour activer/désactiver la musique
+const toggleMusicButton = document.getElementById('toggleMusic');
+toggleMusicButton.addEventListener('click', () => {
+    if (isMusicPlaying) {
+        backgroundMusic.pause(); // Mettre en pause la musique
+        toggleMusicButton.textContent = '🔊'; // Icône son activé
+    } else {
+        backgroundMusic.play().catch(error => {
+            console.error('Erreur lors de la lecture de la musique :', error);
+        });
+        toggleMusicButton.textContent = '🔇'; // Icône son coupé
+    }
+    isMusicPlaying = !isMusicPlaying; // Alterner l'état
+});
+
+// Demander une interaction de l'utilisateur pour démarrer la musique
+// C'est ici que la musique démarre, grâce à l'interaction initiale (clic sur la page)
+window.addEventListener('click', () => {
+    if (!isMusicPlaying) {
+        backgroundMusic.play().catch(error => {
+            console.error('Erreur lors de la lecture automatique de la musique :', error);
+        });
+        toggleMusicButton.textContent = '🔇'; // Icône son coupé
+        isMusicPlaying = true; // La musique est maintenant jouée
+    }
+});
+
+// Vérification du chargement de la musique
+backgroundMusic.addEventListener('canplay', () => {
+    console.log('Musique de fond chargée.');
+});
+
+// Variables pour le dialogue et les choix
+let currentDialogueIndex = 0;
+let dialogues = [
+    "HO HO HO Tata Lélé, j'imagine que tu es prête à recevoir ton cadeau.",
+    "Que voudrais-tu pour Noël ?"
+];
+
+let choices = [
+    "Un massage près de Vannes (dans la limite de 60 € bien évidemment pour ne pas que les autres se sentent lésés, petite maligne).",
+    "Rien, j'ai déjà ce qu'il me faut."
+];
+
+let responses = [
+    "Excellent choix, va voir ton Secret Santa (si tu sais qui c'est) pour lui donner la meilleure adresse de massage de Vannes. Et surtout, joyeux Noël !",
+    "Ho ho ho, heureusement que tout le monde ne réagit pas comme toi, tu veux la mort du petit commerce ou quoi ? Mais bon, joyeux Noël quand même."
+];
+
+let selectedChoice = 0;
+let isChoosing = false;
+let isFinalMessage = false;
+let showingResponse = false;
+
+// Fonction pour redimensionner dynamiquement le canvas
+function resizeCanvas() {
+    canvas.width = window.innerWidth

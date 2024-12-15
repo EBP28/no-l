@@ -47,13 +47,13 @@ backgroundMusic.addEventListener('canplay', () => {
 // Variables pour le dialogue et les choix
 let currentDialogueIndex = 0;
 let dialogues = [
-    "HO HO HO Tata Lélé, j'imagine que tu es prête à recevoir ton cadeau,que voudrais-tu pour Noël ?",
+    "HO HO HO Tata Lélé, j'imagine que tu es prête à recevoir ton cadeau.",
     "Que voudrais-tu pour Noël ?"
 ];
 
 let choices = [
-    "Un massage par EL FAMOSO Richard (dans la limite de 60 € bien évidemment pour ne pas que les autres se sentent lésés, petite maligne).",
-    "Rien, j'ai déjà ce qu'il me faut, ma vie est merveilleuse."
+    "Un massage près de Vannes (dans la limite de 60 € bien évidemment pour ne pas que les autres se sentent lésés, petite maligne).",
+    "Rien, j'ai déjà ce qu'il me faut."
 ];
 
 let responses = [
