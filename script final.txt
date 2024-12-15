@@ -157,36 +157,17 @@ function makeChoice() {
     wrapText(ctx, responses[selectedChoice], 20, 50, canvas.width - 40, 20);
 }
 
-// Fonction pour afficher le message final avec le bouton de redémarrage
+// Fonction pour afficher le message final
 function drawFinalMessage() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     drawTataLele();
-    
-    // Message "JOYEUX NOËL"
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';
     ctx.fillRect(10, canvas.height / 2 - 75, canvas.width - 20, 150);
     ctx.fillStyle = '#fff';
     ctx.font = '48px "Press Start 2P"';
     ctx.textAlign = 'center';
     wrapText(ctx, 'JOYEUX NOËL TATA LÉLÉ', canvas.width / 2, canvas.height / 2 - 24, canvas.width - 40, 48);
-    
-    // Bouton de redémarrage
-    ctx.fillStyle = 'rgba(255, 0, 0, 0.8)';
-    ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 100, 200, 50);
-    ctx.fillStyle = '#fff';
-    ctx.font = '16px "Press Start 2P"';
-    ctx.fillText('RECOMMENCER', canvas.width / 2, canvas.height / 2 + 130);
-}
-
-// Fonction pour redémarrer le jeu
-function restartGame() {
-    currentDialogueIndex = 0;
-    selectedChoice = 0;
-    isChoosing = false;
-    isFinalMessage = false;
-    showingResponse = false;
-    drawDialogue();
 }
 
 // Fonction pour afficher du texte avec retour à la ligne
@@ -230,40 +211,13 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-// Gestion des événements souris et tactiles
-canvas.addEventListener('click', (event) => {
-    if (isFinalMessage) {
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        
-        // Vérifier si le clic est sur le bouton de redémarrage
-        if (x >= canvas.width / 2 - 100 &&
-            x <= canvas.width / 2 + 100 &&
-            y >= canvas.height / 2 + 100 &&
-            y <= canvas.height / 2 + 150) {
-            restartGame();
-        }
-    }
-});
-
+// Gestion des événements tactiles (smartphone)
 canvas.addEventListener('touchstart', (event) => {
     const touch = event.touches[0];
     const rect = canvas.getBoundingClientRect();
     const x = touch.clientX - rect.left;
     const y = touch.clientY - rect.top;
 
-    if (isFinalMessage) {
-        // Vérifier si le toucher est sur le bouton de redémarrage
-        if (x >= canvas.width / 2 - 100 &&
-            x <= canvas.width / 2 + 100 &&
-            y >= canvas.height / 2 + 100 &&
-            y <= canvas.height / 2 + 150) {
-            restartGame();
-            return;
-        }
-    }
-    
     if (isChoosing) {
         const choiceBoxHeight = 60;
         const choiceBoxYStart = canvas.height - 160;
