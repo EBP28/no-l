@@ -28,7 +28,7 @@ toggleMusicButton.addEventListener('click', () => {
     isMusicPlaying = !isMusicPlaying; // Alterner l'état
 });
 
-// Demander une interaction de l'utilisateur pour démarrer la musique (cela contourne la politique de lecture automatique des navigateurs)
+// Demander une interaction de l'utilisateur pour démarrer la musique
 window.addEventListener('click', () => {
     if (!isMusicPlaying) {
         backgroundMusic.play().catch(error => {
@@ -112,10 +112,13 @@ function drawDialogue() {
     drawBackground();
     drawTataLele();
 
+    // Réinitialiser les propriétés du contexte
+    ctx.textAlign = 'left';
+    ctx.font = '16px "Press Start 2P"';
+
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(10, 10, canvas.width - 20, 150); // Boîte de dialogue
     ctx.fillStyle = '#fff';
-    ctx.font = '16px "Press Start 2P"';
     wrapText(ctx, dialogues[currentDialogueIndex], 20, 50, canvas.width - 40, 20);
 }
 
@@ -124,6 +127,10 @@ function drawChoices() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     drawTataLele();
+
+    // Réinitialiser les propriétés du contexte
+    ctx.textAlign = 'left';
+    ctx.font = '16px "Press Start 2P"';
 
     const choiceBoxHeight = 60;
     const choiceBoxWidth = canvas.width - 20;
@@ -134,7 +141,6 @@ function drawChoices() {
         ctx.fillStyle = (i === selectedChoice) ? 'rgba(102, 204, 102, 0.7)' : 'rgba(0, 0, 0, 1)';
         ctx.fillRect(10, choiceBoxY, choiceBoxWidth, choiceBoxHeight);
         ctx.fillStyle = '#ff0000';
-        ctx.font = '16px "Press Start 2P"';
         wrapText(ctx, choices[i], 20, choiceBoxY + 20, canvas.width - 40, 20);
     }
 
@@ -150,14 +156,18 @@ function makeChoice() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     drawTataLele();
+
+    // Réinitialiser les propriétés du contexte
+    ctx.textAlign = 'left';
+    ctx.font = '16px "Press Start 2P"';
+
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(10, 10, canvas.width - 20, 150);
     ctx.fillStyle = '#fff';
-    ctx.font = '16px "Press Start 2P"';
     wrapText(ctx, responses[selectedChoice], 20, 50, canvas.width - 40, 20);
 }
 
-// Fonction pour afficher le message final avec le bouton de redémarrage
+// Fonction pour afficher le message final
 function drawFinalMessage() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
@@ -181,11 +191,18 @@ function drawFinalMessage() {
 
 // Fonction pour redémarrer le jeu
 function restartGame() {
+    // Réinitialiser toutes les variables
     currentDialogueIndex = 0;
     selectedChoice = 0;
     isChoosing = false;
     isFinalMessage = false;
     showingResponse = false;
+    
+    // Réinitialiser les propriétés du contexte
+    ctx.textAlign = 'left';
+    ctx.font = '16px "Press Start 2P"';
+    
+    // Redessiner le dialogue initial
     drawDialogue();
 }
 
