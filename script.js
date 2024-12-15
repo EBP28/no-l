@@ -57,8 +57,8 @@ let choices = [
 ];
 
 let responses = [
-    "Excellent choix, va voir ton Secret Santa (si tu sais qui c'est) pour lui donner la meilleure adresse de massage de Vannes. Et surtout, joyeux Noël !",
-    "Ho ho ho, heureusement que tout le monde ne réagit pas comme toi, tu veux la mort du petit commerce ou quoi ? Mais bon, joyeux Noël quand même."
+    "Excellent choix, va voir ton Secret Santa (si tu sais qui c'est) pour lui donner tes disponibiliés sur Chartres. Et surtout, joyeux Noël !",
+    "Ho ho ho, Tu n'as pas honte d'étaler ton bonheur comme ça  et heureusement que tout le monde ne réagit pas comme toi, tu veux la mort du petit commerce ou quoi ? Mais bon, joyeux Noël quand même."
 ];
 
 let selectedChoice = 0;
